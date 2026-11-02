@@ -1,12 +1,51 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
-profile=base; [[ ${1:-} == --profile ]] && { profile=${2:?}; shift 2; }
-[[ $profile == base || $profile == full ]] || { echo 'Usage: workstation install [--profile base|full]'; exit 2; }
-m=$(manager); echo "Installing profile=$profile via $m (experimental)."
+profile=base
+if [[ ${1:-} == --profile ]]; then profile=${2:?missing profile}; shift 2; fi
+[[ $profile == base || $profile == full ]] || { echo 'Usage: install.sh [--profile base|full]' >&2; exit 2; }
+if (($#)); then echo "Unknown argument: $1" >&2; exit 2; fi
+
+printf 'DevOps AI Workstation v0.1.0 · experimental · profile: %s\n' "$profile"
+printf 'This installs only the base shell tools currently supported by this platform.\n'
+manager_name=$(manager)
 base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux)
-full=(awscli azure-cli google-cloud-sdk kubectl helm k9s kubectx terraform opentofu terragrunt docker podman ansible packer semgrep gitleaks trivy grype syft cosign checkov tflint actionlint gh aider)
-for p in "${base[@]}"; do install_pkg "$m" "$p"; done
-if [[ $profile == full ]]; then for p in "${full[@]}"; do install_pkg "$m" "$p"; done; echo 'Some named tools (CodeQL, OSV-Scanner, Zizmor, Claude Code, Codex CLI, Cursor, Gemini CLI) require vendor-specific reviewed installation and were skipped.'; fi
-conf="$HOME/.config"; mkdir -p "$conf"
-for src in "$ROOT/config/starship.toml" "$ROOT/config/zsh/.zshrc"; do target="$conf/$(basename "$src")"; [[ $src == */.zshrc ]] && target="$HOME/.zshrc"; if [[ ! -e $target ]]; then cp "$src" "$target"; else echo "Config exists, left unchanged: $target"; fi; done
+case "$manager_name" in
+  brew)
+    for package in "${base[@]}"; do
+      if brew list --versions "$package" >/dev/null 2>&1; then
+        printf 'Already installed: %s\n' "$package"
+      else
+        printf 'Installing: %s\n' "$package"
+        brew install "$package"
+      fi
+    done
+    ;;
+  apt)
+    printf 'Detected apt. No packages were installed because this starter never invokes sudo.\n'
+    printf 'Install the base tools with your chosen package workflow, then rerun doctor.\n'
+    ;;
+  dnf|pacman)
+    printf 'Detected %s. Package installation is not wired up yet; no changes made.\n' "$manager_name"
+    ;;
+  *)
+    printf 'No supported package manager found. No packages installed.\n'
+    ;;
+esac
+
+config_dir="$HOME/.config"
+mkdir -p "$config_dir"
+for source_file in "$ROOT/config/starship.toml" "$ROOT/config/zsh/.zshrc"; do
+  if [[ $source_file == */.zshrc ]]; then destination="$HOME/.zshrc"; else destination="$config_dir/starship.toml"; fi
+  if [[ -e $destination ]]; then
+    printf 'Preserved existing config: %s\n' "$destination"
+  else
+    cp "$source_file" "$destination"
+    printf 'Added sample config: %s\n' "$destination"
+  fi
+done
+
+if [[ $profile == full ]]; then
+  printf '\nThe full profile is planned. Cloud, security, and AI tool installers have not been implemented; nothing extra was installed.\n'
+fi
+printf '\nDone. Run ./scripts/workstation/workstation doctor to review this machine.\n'
