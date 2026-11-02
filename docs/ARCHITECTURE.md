@@ -1,5 +1,7 @@
 # Architecture
 
-The Bash bootstrap delegates to small CLI scripts. `base` is terminal-focused; `full` makes best-effort package-manager attempts. Cloud and AI profiles are planned. macOS uses Homebrew when present. Linux package installation is intentionally skipped unless it can be done without privilege surprises; package names differ by distribution. Windows PowerShell currently delegates only inside WSL2; native support is planned and Windows Terminal is recommended.
+The Bash entry point dispatches to small scripts under `scripts/workstation/`. The `base` profile is currently implemented only as a Homebrew installer for macOS. On Linux, the script detects apt, dnf, or pacman but does not install packages; users choose their distribution-specific package workflow. `full` currently installs no additional tools and reports that cloud, security, and AI profiles are planned.
 
-Config samples are copied only when a target does not exist. Existing files are preserved. Backups are required before any future replacement feature. The MCP catalog is informational and no server is started.
+The sample Starship and Zsh files are copied only when their destinations do not exist. The installer does not overwrite user configuration, authenticate to services, provision credentials, or invoke sudo. `doctor` reports platform, package manager, and availability of shell tools without inspecting credentials.
+
+Windows PowerShell delegates to the Bash installer only from WSL2. Native Windows setup is planned; Windows Terminal is the recommended terminal. Ghostty is the preferred terminal where supported. MCP documentation is advisory only, and no MCP server is launched.
