@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+<title id="title">DevOps AI Workstation terminal design preview</title>
+<desc id="desc">A dark terminal interface with a status rail, tool categories, and an example workstation doctor result.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0a1017"/><stop offset="1" stop-color="#111b27"/></linearGradient>
+  <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#61e6c0"/><stop offset="1" stop-color="#5aa7ff"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#000" flood-opacity=".4"/></filter>
+</defs>
+<rect width="1200" height="660" rx="26" fill="url(#bg)"/>
+<circle cx="1040" cy="120" r="210" fill="#2dd4bf" opacity=".055"/><circle cx="130" cy="590" r="230" fill="#438cff" opacity=".06"/>
+<text x="64" y="74" fill="#e8f2f6" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="3">DEVOPS AI WORKSTATION</text>
+<text x="64" y="113" fill="#8295a4" font-family="Inter,Arial,sans-serif" font-size="16">A focused command line for infrastructure, security, and AI-assisted engineering.</text>
+<g filter="url(#shadow)">
+ <rect x="64" y="154" width="1072" height="438" rx="18" fill="#0c1219" stroke="#263542"/>
+ <path d="M64 172a18 18 0 0 1 18-18h1036a18 18 0 0 1 18 18v34H64z" fill="#18232d"/>
+ <circle cx="91" cy="181" r="6" fill="#ff6f69"/><circle cx="112" cy="181" r="6" fill="#f6bd4f"/><circle cx="133" cy="181" r="6" fill="#42c987"/>
+ <text x="600" y="186" text-anchor="middle" fill="#91a3b2" font-family="Inter,Arial,sans-serif" font-size="12">workstation — zsh</text>
+</g>
+<rect x="88" y="226" width="226" height="338" rx="12" fill="#101a23" stroke="#20303b"/>
+<text x="112" y="260" fill="#58d7b5" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.6">YOUR TOOLBELT</text>
+<text x="112" y="300" fill="#e6f0f4" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600">01  Shell</text><text x="112" y="325" fill="#8195a4" font-family="Inter,Arial,sans-serif" font-size="12">zsh · starship · fzf</text>
+<text x="112" y="370" fill="#e6f0f4" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600">02  Cloud &amp; delivery</text><text x="112" y="395" fill="#8195a4" font-family="Inter,Arial,sans-serif" font-size="12">kubectl · terraform · helm</text>
+<text x="112" y="440" fill="#e6f0f4" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600">03  Security</text><text x="112" y="465" fill="#8195a4" font-family="Inter,Arial,sans-serif" font-size="12">gitleaks · trivy · semgrep</text>
+<text x="112" y="510" fill="#e6f0f4" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600">04  AI &amp; agents</text><text x="112" y="535" fill="#8195a4" font-family="Inter,Arial,sans-serif" font-size="12">skills · MCP, by choice</text>
+<text x="346" y="253" fill="#91a3b2" font-family="SFMono-Regular,Consolas,monospace" font-size="13">will <tspan fill="#58d7b5">~/projects/payments-api</tspan> <tspan fill="#8295a4">on</tspan> <tspan fill="#a78bfa">main</tspan></text>
+<text x="346" y="292" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="14">$ ./scripts/workstation/workstation doctor</text>
+<text x="346" y="338" fill="#58d7b5" font-family="SFMono-Regular,Consolas,monospace" font-size="13">DevOps AI Workstation v0.1.0 — experimental diagnostic</text>
+<text x="346" y="371" fill="#8295a4" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Platform</text><text x="470" y="371" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">macOS · arm64</text>
+<text x="346" y="397" fill="#8295a4" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Package manager</text><text x="470" y="397" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Homebrew</text>
+<text x="346" y="441" fill="#58d7b5" font-family="SFMono-Regular,Consolas,monospace" font-size="13">●</text><text x="368" y="441" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">zsh       starship       fzf       ripgrep</text>
+<text x="346" y="468" fill="#58d7b5" font-family="SFMono-Regular,Consolas,monospace" font-size="13">●</text><text x="368" y="468" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">zoxide    jq              eza       bat</text>
+<text x="346" y="495" fill="#f6bd4f" font-family="SFMono-Regular,Consolas,monospace" font-size="13">●</text><text x="368" y="495" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Cloud and AI sign-in are always your choice.</text>
+<rect x="346" y="526" width="744" height="1" fill="#23323e"/>
+<text x="346" y="552" fill="#718695" font-family="Inter,Arial,sans-serif" font-size="11">DESIGN PREVIEW · illustrative output, not a captured running installation</text>
+</svg>
