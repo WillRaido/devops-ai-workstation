@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 set -u
-echo 'DevOps AI Workstation v0.1.0 — experimental diagnostic'
-printf 'OS: '; uname -srm
-printf 'Package manager: '; if command -v brew >/dev/null; then echo brew; elif command -v apt-get >/dev/null; then echo apt; elif command -v dnf >/dev/null; then echo dnf; else echo unknown; fi
-for c in zsh starship zoxide fzf rg jq eza bat atuin tmux; do if command -v "$c" >/dev/null 2>&1; then printf 'OK   %s
-' "$c"; else printf 'MISS %s
-' "$c"; fi; done
-echo 'No credentials or cloud authentication are inspected.'
+
+printf '\nDevOps AI Workstation  ·  v0.1.0 experimental\n'
+printf '%s\n' '──────────────────────────────────────────────'
+printf 'Platform       %s\n' "$(uname -srm)"
+if command -v brew >/dev/null 2>&1; then manager_name=Homebrew
+elif command -v apt-get >/dev/null 2>&1; then manager_name=apt
+elif command -v dnf >/dev/null 2>&1; then manager_name=dnf
+elif command -v pacman >/dev/null 2>&1; then manager_name=pacman
+else manager_name=unknown
+fi
+printf 'Package manager %s\n\n' "$manager_name"
+
+ok=0; missing=0
+for command_name in zsh starship zoxide fzf rg jq eza bat atuin tmux; do
+  if command -v "$command_name" >/dev/null 2>&1; then
+    printf '  ✓  %s\n' "$command_name"; ((ok+=1))
+  else
+    printf '  ·  %s  (not found)\n' "$command_name"; ((missing+=1))
+  fi
+done
+printf '\n%d available · %d missing\n' "$ok" "$missing"
+printf 'Cloud credentials are not inspected. Cloud and AI profiles are planned.\n\n'
