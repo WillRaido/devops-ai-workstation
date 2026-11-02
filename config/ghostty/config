@@ -1,0 +1,3 @@
+# Optional Ghostty sample. Windows-native users: use Windows Terminal.
+font-size = 13
+theme = dark

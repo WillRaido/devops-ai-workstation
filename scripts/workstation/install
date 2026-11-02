@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+source "$(dirname "$0")/common.sh"
+profile=base; [[ ${1:-} == --profile ]] && { profile=${2:?}; shift 2; }
+[[ $profile == base || $profile == full ]] || { echo 'Usage: workstation install [--profile base|full]'; exit 2; }
+m=$(manager); echo "Installing profile=$profile via $m (experimental)."
+base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux)
+full=(awscli azure-cli google-cloud-sdk kubectl helm k9s kubectx terraform opentofu terragrunt docker podman ansible packer semgrep gitleaks trivy grype syft cosign checkov tflint actionlint gh aider)
+for p in "${base[@]}"; do install_pkg "$m" "$p"; done
+if [[ $profile == full ]]; then for p in "${full[@]}"; do install_pkg "$m" "$p"; done; echo 'Some named tools (CodeQL, OSV-Scanner, Zizmor, Claude Code, Codex CLI, Cursor, Gemini CLI) require vendor-specific reviewed installation and were skipped.'; fi
+conf="$HOME/.config"; mkdir -p "$conf"
+for src in "$ROOT/config/starship.toml" "$ROOT/config/zsh/.zshrc"; do target="$conf/$(basename "$src")"; [[ $src == */.zshrc ]] && target="$HOME/.zshrc"; if [[ ! -e $target ]]; then cp "$src" "$target"; else echo "Config exists, left unchanged: $target"; fi; done
