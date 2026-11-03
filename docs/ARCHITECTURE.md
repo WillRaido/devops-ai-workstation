@@ -1,7 +1,9 @@
 # Architecture
 
-The Bash entry point dispatches to small scripts under `scripts/workstation/`. The `base` profile is currently implemented only as a Homebrew installer for macOS. On Linux, the script detects apt, dnf, or pacman but does not install packages; users choose their distribution-specific package workflow. `full` currently installs no additional tools and reports that cloud, security, and AI profiles are planned.
+The Bash entry point starts a short interactive wizard when run in a terminal. It detects the platform, package manager, Ghostty, and installed base tools; asks whether to install the missing base tools; optionally accepts a comma-separated selection; offers Ghostty installation on Homebrew; and asks before applying the plan. Explicit arguments support scripted selection.
 
-The sample Starship and Zsh files are copied only when their destinations do not exist. The installer does not overwrite user configuration, authenticate to services, provision credentials, or invoke sudo. `doctor` reports platform, package manager, and availability of shell tools without inspecting credentials.
+On macOS, Homebrew installs selected base packages and skips already installed ones. On Linux, apt, dnf, and pacman are detected, but package installation is not yet wired up. The installer never invokes sudo. The `full` profile remains a catalog-only placeholder for cloud, security, and AI tools.
 
-Windows PowerShell delegates to the Bash installer only from WSL2. Native Windows setup is planned; Windows Terminal is the recommended terminal. Ghostty is the preferred terminal where supported. MCP documentation is advisory only, and no MCP server is launched.
+Sample Starship and Zsh files are copied only when the target does not exist. Ghostty themes (Nord, Dracula, Catppuccin Mocha, and Gruvbox Dark) can be selected when Ghostty is available. If a Ghostty config exists, a timestamped copy is made before changing its theme. No credentials or cloud logins are created or inspected.
+
+Windows PowerShell delegates to the Bash installer only from WSL2. Native Windows setup is planned; Windows Terminal is the recommended terminal. Ghostty is preferred where supported. MCP documentation is advisory only, and no MCP server is launched.
