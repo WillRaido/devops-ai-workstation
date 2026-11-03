@@ -55,6 +55,45 @@ ask_yes_no() {
   done
 }
 
+menu_choose() {
+  local title="$1" mode="$2" key sequence i mark
+  local cursor=0
+  menu_result=()
+  local -a menu_toggles=()
+  for ((i=0; i<${#menu_options[@]}; i++)); do menu_toggles+=(0); done
+  while true; do
+    printf '\033[H\033[2J\n  %s\n' "$title"
+    if [[ $mode == multi ]]; then printf '  ↑/↓ mover · Espacio marcar · a todas · c limpiar · Enter continuar\n\n'
+    else printf '  ↑/↓ mover · Enter elegir\n\n'; fi
+    for ((i=0; i<${#menu_options[@]}; i++)); do
+      if [[ $mode == multi ]]; then [[ ${menu_toggles[i]} == 1 ]] && mark='x' || mark=' '
+      else [[ $i == "$cursor" ]] && mark='›' || mark=' '; fi
+      printf '  %s [%s] %s\n' "$([[ $i == "$cursor" ]] && printf '>' || printf ' ')" "$mark" "${menu_options[i]}"
+    done
+    if [[ $mode == multi ]]; then
+      local count=0
+      for mark in "${menu_toggles[@]}"; do [[ $mark == 1 ]] && ((count+=1)); done
+      printf '\n  %d herramienta(s) seleccionada(s)\n' "$count"
+    fi
+    IFS= read -r -s -n1 key
+    if [[ $key == $'\033' ]]; then
+      sequence=''; IFS= read -r -s -n2 -t 0.1 sequence || true
+      case "$sequence" in '[A'|'OA') ((cursor>0)) && ((cursor-=1)) ;; '[B'|'OB') ((cursor<${#menu_options[@]}-1)) && ((cursor+=1)) ;; esac
+    elif [[ $key == $'\n' || $key == $'\r' ]]; then
+      if [[ $mode == multi ]]; then
+        for ((i=0; i<${#menu_options[@]}; i++)); do [[ ${menu_toggles[i]} == 1 ]] && menu_result+=("${menu_options[i]}"); done
+      else menu_result=("${menu_options[cursor]}"); fi
+      return 0
+    elif [[ $mode == multi && $key == ' ' ]]; then
+      [[ ${menu_toggles[cursor]} == 1 ]] && menu_toggles[cursor]=0 || menu_toggles[cursor]=1
+    elif [[ $mode == multi && $key == [aA] ]]; then
+      for ((i=0; i<${#menu_toggles[@]}; i++)); do menu_toggles[i]=1; done
+    elif [[ $mode == multi && $key == [cC] ]]; then
+      for ((i=0; i<${#menu_toggles[@]}; i++)); do menu_toggles[i]=0; done
+    fi
+  done
+}
+
 if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
   clear 2>/dev/null || true
   printf '\n\033[1;36m  DEVOPS AI WORKSTATION\033[0m  ·  v0.1.0 experimental\n'
@@ -62,20 +101,30 @@ if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
   printf '  Sistema: %s\n  Gestor:  %s\n  Ghostty: %s\n\n' "$(uname -srm)" "$manager_name" "$([[ $ghostty_found -eq 1 ]] && echo 'detectado' || echo 'no detectado')"
   printf '  Paso 1/4 · Herramientas de terminal\n'
   if ((${#selected[@]} == 0)); then
-    if ask_yes_no '  ¿Instalo las herramientas base que falten?' ; then selected=("${base[@]}"); fi
-  fi
-  if ((${#selected[@]} == 0)); then
-    printf '  Escribe los nombres separados por coma, o Enter para omitir.\n  Opciones: %s\n' "${base[*]}"
-    read -r -p '  Selección: ' choice
-    if [[ -n $choice ]]; then IFS=',' read -r -a selected <<< "$choice"; fi
+    menu_options=("${base[@]}")
+    if [[ ${TERM:-dumb} != dumb ]]; then
+      menu_choose 'Elige las herramientas base que quieres instalar' multi
+      selected=("${menu_result[@]}")
+    else
+      printf '  Escribe los nombres separados por coma, o Enter para omitir.\n  Opciones: %s\n' "${base[*]}"
+      read -r -p '  Selección: ' choice
+      if [[ -n $choice ]]; then IFS=',' read -r -a selected <<< "$choice"; fi
+    fi
   fi
   printf '\n  Paso 2/4 · Ghostty\n'
   if [[ $ghostty_found -eq 0 && $manager_name == brew ]] && ask_yes_no '  ¿Instalo Ghostty también?' ; then install_ghostty=yes; fi
   printf '\n  Paso 3/4 · Tema\n'
   if [[ $ghostty_found -eq 1 || $install_ghostty == yes ]]; then
-    printf '  Temas: Nord, Dracula, Catppuccin Mocha, Gruvbox Dark\n'
-    read -r -p '  Tema de Ghostty (Enter para dejarlo igual): ' theme_choice
-    [[ -n $theme_choice ]] && apply_theme=$theme_choice
+    if [[ ${TERM:-dumb} != dumb ]]; then
+      menu_options=('Dejar el tema actual' Nord Dracula 'Catppuccin Mocha' 'Gruvbox Dark')
+      menu_choose 'Elige un tema para Ghostty' single
+      theme_choice=${menu_result[0]}
+      [[ $theme_choice == 'Dejar el tema actual' ]] || apply_theme=$theme_choice
+    else
+      printf '  Temas: Nord, Dracula, Catppuccin Mocha, Gruvbox Dark\n'
+      read -r -p '  Tema de Ghostty (Enter para dejarlo igual): ' theme_choice
+      [[ -n $theme_choice ]] && apply_theme=$theme_choice
+    fi
   fi
   printf '\n  Paso 4/4 · Mensaje de bienvenida · Zsh / Ghostty\n'
   if [[ -n $welcome_message ]]; then
