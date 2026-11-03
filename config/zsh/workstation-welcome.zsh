@@ -12,7 +12,9 @@ _workstation_show_welcome() {
   else
     printf '\n'
   fi
-  if [[ "$style" == ascii ]]; then
+  if [[ "$style" == ascii ]] && command -v figlet >/dev/null 2>&1; then
+    figlet -w 72 "$message"
+  elif [[ "$style" == ascii ]]; then
     border=$(printf '%*s' "$(( ${#message} + 4 ))" '' | tr ' ' '-')
     printf '+%s+\n|  %s  |\n+%s+\n' "$border" "$message" "$border"
   else
