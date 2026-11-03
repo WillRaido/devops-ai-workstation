@@ -9,4 +9,3 @@ if [[ -z "${WSL_DISTRO_NAME:-}" && "$(uname -s)" == Linux && -n "${WSL_INTEROP:-
 command -v workstation >/dev/null 2>&1 && echo 'Existing workstation command found; using repository scripts for this run.'
 export WORKSTATION_ROOT="$ROOT"
 bash "$ROOT/scripts/workstation/install" --profile "$PROFILE"
-echo 'Starter bootstrap completed. Review skipped tools and limitations above.'
