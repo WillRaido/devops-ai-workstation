@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+<title id="title">Interactive installer walkthrough</title>
+<desc id="desc">A terminal mockup of the four interactive installation steps: select tools, Ghostty, theme, and welcome banner, then confirm the plan.</desc>
+<rect width="1200" height="720" rx="28" fill="#0b1118"/>
+<text x="58" y="70" fill="#eef5f8" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="700" letter-spacing="2">THE INSTALLER, STEP BY STEP</text>
+<text x="58" y="105" fill="#8295a4" font-family="Inter,Arial,sans-serif" font-size="15">Illustrative console walkthrough · actual prompts may vary by detected system</text>
+<rect x="58" y="140" width="1084" height="520" rx="18" fill="#0e151d" stroke="#263542"/>
+<path d="M58 158a18 18 0 0 1 18-18h1048a18 18 0 0 1 18 18v36H58z" fill="#19242e"/>
+<circle cx="86" cy="168" r="6" fill="#ff6f69"/><circle cx="106" cy="168" r="6" fill="#f6bd4f"/><circle cx="126" cy="168" r="6" fill="#42c987"/>
+<text x="600" y="173" text-anchor="middle" fill="#91a3b2" font-family="Inter,Arial,sans-serif" font-size="12">bash ./install.sh</text>
+<text x="94" y="235" fill="#58d7b5" font-family="SFMono-Regular,Consolas,monospace" font-size="15">DEVOPS AI WORKSTATION · v0.1.0 experimental</text>
+<text x="94" y="265" fill="#8295a4" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Sistema: Darwin arm64    Gestor: Homebrew    Ghostty: detectado</text>
+<text x="94" y="316" fill="#a78bfa" font-family="SFMono-Regular,Consolas,monospace" font-size="14">Paso 1/4 · Herramientas de terminal</text>
+<text x="94" y="345" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">¿Instalo las herramientas base que falten? [y/N] <tspan fill="#58d7b5">y</tspan></text>
+<text x="94" y="386" fill="#a78bfa" font-family="SFMono-Regular,Consolas,monospace" font-size="14">Paso 2/4 · Ghostty</text><text x="94" y="412" fill="#8295a4" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Detectado · se conserva</text>
+<text x="94" y="453" fill="#a78bfa" font-family="SFMono-Regular,Consolas,monospace" font-size="14">Paso 3/4 · Tema</text><text x="94" y="479" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Nord · Dracula · Catppuccin Mocha · Gruvbox Dark</text>
+<text x="94" y="520" fill="#a78bfa" font-family="SFMono-Regular,Consolas,monospace" font-size="14">Paso 4/4 · Mensaje de bienvenida</text><text x="94" y="546" fill="#d9e6ec" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Texto: <tspan fill="#58d7b5">WillDevOps</tspan>    Estilo: <tspan fill="#58d7b5">ASCII grande</tspan></text>
+<text x="94" y="593" fill="#f6bd4f" font-family="SFMono-Regular,Consolas,monospace" font-size="13">Plan resumido · ¿Aplico este plan? [y/N] <tspan fill="#58d7b5">y</tspan></text>
+<text x="94" y="630" fill="#718695" font-family="Inter,Arial,sans-serif" font-size="11">La selección de cloud, seguridad e IA aún no está implementada.</text>
+</svg>
