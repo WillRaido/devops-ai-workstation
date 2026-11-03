@@ -7,7 +7,7 @@
 **A practical, safety-first starter for DevOps, security, and AI-assisted work.**  
 macOS · Linux · WSL2 &nbsp; / &nbsp; Ghostty preferred · Windows Terminal on native Windows
 
-[Get started](#get-started) · [What’s inside](#the-workstation) · [Screenshots & guide](docs/SHOWCASE.md) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
+[Get started](#get-started) · [Themes & screenshots](#themes-and-installer-screens) · [Choose tools](#choose-tools-and-personalize) · [What’s inside](#the-workstation) · [Roadmap](docs/ROADMAP.md)
 
 ![Terminal preview of the DevOps AI Workstation](assets/workstation-preview.svg)
 
@@ -38,6 +38,51 @@ The installer walks through the choices in the console. It checks for existing b
 On macOS, Homebrew installs selected tools. On Linux, the wizard detects apt, dnf, or pacman but does not install packages yet; it never invokes `sudo`. If Ghostty is detected or you choose to install it through Homebrew, you can select Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark. When a Ghostty config already exists, the installer saves a timestamped backup before changing its theme. Ghostty also provides a larger built-in theme list through `ghostty +list-themes`. Other platform package integrations and full cloud/security/AI profiles remain planned.
 
 You can also pass choices directly, for example `./install.sh --with zsh,starship,fzf --theme Nord --welcome WillDevOps`. Run `./install.sh --help` to see options. Review the scripts before running them if you want to see exactly what they do.
+
+## Themes and installer screens
+
+These are visual previews of the available choices and setup flow. They are **illustrative mockups**, not screenshots of a completed installation.
+
+### Ghostty themes
+
+Choose Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark during setup. To see the full theme list available in your installed Ghostty, run `ghostty +list-themes`.
+
+![Visual previews of four Ghostty themes: Nord, Dracula, Catppuccin Mocha, and Gruvbox Dark](assets/theme-gallery.svg)
+
+### Console setup
+
+The wizard detects tools already installed, asks which missing base tools to add, offers Ghostty and a theme, then lets you set an optional Zsh welcome banner such as `WillDevOps`. It shows the plan and asks before applying it.
+
+![Illustrative screenshot of the interactive terminal installer](assets/installer-walkthrough.svg)
+
+## Choose tools and personalize
+
+Start the guided flow:
+
+```bash
+bash ./install.sh
+```
+
+At the tool prompt, answer `y` to select every missing base tool. Answer `n` to enter only the ones you want, separated by commas, for example `zsh,starship,fzf`. Already installed packages are skipped. The current selectable base list is Zsh, Starship, zoxide, fzf, ripgrep, jq, eza, bat, Atuin, tmux, and figlet.
+
+You can also pass selections directly:
+
+```bash
+./install.sh --with zsh,starship,fzf
+./install.sh --theme Nord --welcome 'WillDevOps' --welcome-style ascii
+./install.sh --welcome 'Platform Team' --welcome-style plain
+./scripts/workstation/workstation doctor
+```
+
+The ASCII welcome style prints large letters with `figlet` when installed; otherwise it uses a text frame. The plain style prints a short decorated line. Welcome text runs only in interactive Zsh sessions. If an existing `.zshrc` needs a startup hook, the installer saves a timestamped backup first. Ghostty theme changes also back up an existing config.
+
+To inspect supported options and examples:
+
+```bash
+./install.sh --help
+```
+
+Cloud, security, AI, `workstation theme`, `workstation skills`, and `workstation mcp` management are planned; the current installer does not claim to install those tools yet.
 
 ### Check your setup
 
