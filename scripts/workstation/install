@@ -37,7 +37,7 @@ if [[ $apply_theme != auto && $apply_theme != '' ]]; then
   esac
 fi
 
-base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux)
+base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux figlet)
 manager_name=$(manager)
 command -v ghostty >/dev/null 2>&1 && ghostty_found=1 || ghostty_found=0
 if [[ $manager_name == brew ]] && brew list --cask ghostty >/dev/null 2>&1; then ghostty_found=1; fi
@@ -144,8 +144,11 @@ fi
 
 if [[ -n $theme ]]; then
   if [[ $ghostty_found -eq 1 || $install_ghostty == yes ]]; then
-    ghostty_config="$config_dir/ghostty/config"
-    mkdir -p "$(dirname "$ghostty_config")"
+    ghostty_dir="$config_dir/ghostty"
+    mkdir -p "$ghostty_dir"
+    if [[ -e "$ghostty_dir/config.ghostty" ]]; then ghostty_config="$ghostty_dir/config.ghostty"
+    elif [[ -e "$ghostty_dir/config" ]]; then ghostty_config="$ghostty_dir/config"
+    else ghostty_config="$ghostty_dir/config.ghostty"; fi
     if [[ -e $ghostty_config ]]; then
       backup="$ghostty_config.backup.$(date +%Y%m%d%H%M%S)"
       cp -p "$ghostty_config" "$backup"
