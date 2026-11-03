@@ -7,7 +7,7 @@
 **A practical, safety-first starter for DevOps, security, and AI-assisted work.**  
 macOS · Linux · WSL2 &nbsp; / &nbsp; Ghostty preferred · Windows Terminal on native Windows
 
-[Get started](#get-started) · [What’s inside](#the-workstation) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
+[Get started](#get-started) · [What’s inside](#the-workstation) · [Screenshots & guide](docs/SHOWCASE.md) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
 
 ![Terminal preview of the DevOps AI Workstation](assets/workstation-preview.svg)
 
@@ -70,6 +70,7 @@ Commands `install` and `doctor` work in this starter. `update`, `cloud`, `securi
 
 ## Explore
 
+- [Screenshots, themes, and command guide](docs/SHOWCASE.md)
 - [Architecture and platform behavior](docs/ARCHITECTURE.md)
 - [Tool inventory and installation status](docs/MANIFEST.md)
 - [MCP least-privilege guidance](docs/MCP-CATALOG.md)
