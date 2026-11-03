@@ -13,7 +13,7 @@ fi
 printf 'Package manager %s\n\n' "$manager_name"
 
 ok=0; missing=0
-for command_name in zsh starship zoxide fzf rg jq eza bat atuin tmux; do
+for command_name in zsh starship zoxide fzf rg jq eza bat atuin tmux figlet; do
   if command -v "$command_name" >/dev/null 2>&1; then
     printf '  ✓  %s\n' "$command_name"; ((ok+=1))
   else
