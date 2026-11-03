@@ -18,7 +18,7 @@ To change themes later, edit the `theme = ...` line in `~/.config/ghostty/config
 
 ## Welcome message
 
-The optional welcome message is printed when Zsh starts interactively. You can enter a name, team label, or short phrase, such as `WillDevOps` or `DevOps Workstation`.
+The optional welcome message is displayed before the first interactive Zsh prompt, after shell initialization has completed. This avoids writing to the startup stream that Powerlevel10k instant prompt monitors. You can enter a name, team label, or short phrase, such as `WillDevOps` or `DevOps Workstation`.
 
 - **ASCII large letters:** uses `figlet` if installed; otherwise shows a text frame.
 - **Simple:** prints a compact decorated line.
