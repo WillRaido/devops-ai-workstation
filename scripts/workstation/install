@@ -72,10 +72,12 @@ if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
     [[ -n $theme_choice ]] && apply_theme=$theme_choice
   fi
   printf '\n  Paso 4/4 · Mensaje de bienvenida · Zsh / Ghostty\n'
-  if ask_yes_no '  ¿Quieres un mensaje al abrir una terminal Zsh?' ; then
+  if [[ -n $welcome_message ]]; then
+    printf '  Mensaje recibido por argumento: %s\n' "$welcome_message"
+  elif ask_yes_no '  ¿Quieres un mensaje al abrir una terminal Zsh?' ; then
     read -r -p '  Texto (ejemplo WillDevOps, Enter = DevOps Workstation): ' welcome_message
     [[ -n $welcome_message ]] || welcome_message='DevOps Workstation'
-    printf '  Estilo: 1) ASCII enmarcado  2) sencillo\n'
+    printf '  Estilo: 1) ASCII grande  2) sencillo\n'
     read -r -p '  Elige 1 o 2 [1]: ' style_choice
     if [[ $style_choice == 2 ]]; then welcome_style=plain; else welcome_style=ascii; fi
   fi
