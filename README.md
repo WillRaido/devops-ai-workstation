@@ -25,7 +25,7 @@ This repository is the first, intentionally small foundation. The visual above i
 
 ## Get started
 
-Copy this single command to clone the project and run the **base** setup:
+Copy this command to clone the project and start the interactive installer:
 
 ```bash
 git clone https://github.com/WillRaido/devops-ai-workstation.git && cd devops-ai-workstation && ./install.sh --profile base
@@ -33,7 +33,11 @@ git clone https://github.com/WillRaido/devops-ai-workstation.git && cd devops-ai
 
 On Windows, open PowerShell in WSL2 and run the same command. For a native Windows terminal, use Windows Terminal; native PowerShell setup is not implemented yet.
 
-The base setup uses Homebrew on macOS when available. On Linux it reports packages that need your distribution’s package manager and leaves installation to you; it never invokes `sudo`. It copies the sample Starship and Zsh settings only when the destination files do not already exist. Read the scripts before running them if you want to see exactly what they do.
+The installer walks through the choices in the console. It checks for existing base tools and Ghostty, offers to install missing tools, lets you select individual tools, and asks before applying the plan. Already installed packages are skipped. Existing Zsh and Starship configuration files are preserved.
+
+On macOS, Homebrew installs selected tools. On Linux, the wizard detects apt, dnf, or pacman but does not install packages yet; it never invokes `sudo`. If Ghostty is detected or you choose to install it through Homebrew, you can select Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark. When a Ghostty config already exists, the installer saves a timestamped backup before changing its theme. Other platform package integrations and full cloud/security/AI profiles remain planned.
+
+You can also pass choices directly, for example `./install.sh --with zsh,starship,fzf --theme Nord`. Run `./install.sh --help` to see options. Review the scripts before running them if you want to see exactly what they do.
 
 ### Check your setup
 
