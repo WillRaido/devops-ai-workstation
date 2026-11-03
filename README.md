@@ -74,7 +74,7 @@ You can also pass selections directly:
 ./scripts/workstation/workstation doctor
 ```
 
-The ASCII welcome style prints large letters with `figlet` when installed; otherwise it uses a text frame. The plain style prints a short decorated line. Welcome text runs only in interactive Zsh sessions. If an existing `.zshrc` needs a startup hook, the installer saves a timestamped backup first. Ghostty theme changes also back up an existing config.
+The ASCII welcome style prints large letters with `figlet` when installed; otherwise it uses a text frame. The plain style prints a short decorated line. The banner waits until Zsh has finished initializing and displays just before the first prompt, so it does not write to the shell startup stream used by Powerlevel10k instant prompt. If an existing `.zshrc` needs a startup hook, the installer saves a timestamped backup first. Ghostty theme changes also back up an existing config.
 
 To inspect supported options and examples:
 
