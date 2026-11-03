@@ -1,51 +1,138 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
-profile=base
-if [[ ${1:-} == --profile ]]; then profile=${2:?missing profile}; shift 2; fi
-[[ $profile == base || $profile == full ]] || { echo 'Usage: install.sh [--profile base|full]' >&2; exit 2; }
-if (($#)); then echo "Unknown argument: $1" >&2; exit 2; fi
 
-printf 'DevOps AI Workstation v0.1.0 · experimental · profile: %s\n' "$profile"
-printf 'This installs only the base shell tools currently supported by this platform.\n'
-manager_name=$(manager)
+profile=base
+selected=()
+install_ghostty=auto
+apply_theme=auto
+noninteractive=0
+while (($#)); do
+  case "$1" in
+    --profile) profile=${2:?missing profile}; shift 2 ;;
+    --with) IFS=',' read -r -a selected <<< "${2:?missing comma-separated tools}"; shift 2 ;;
+    --ghostty) install_ghostty=yes; shift ;;
+    --theme) apply_theme=${2:?missing theme}; shift 2 ;;
+    --yes) noninteractive=1; shift ;;
+    -h|--help) echo 'Usage: bash ./install.sh [--profile base|full] [--with tool,tool] [--ghostty] [--theme Nord] [--yes]'; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; exit 2 ;;
+  esac
+done
+[[ $profile == base || $profile == full ]] || { echo 'Profile must be base or full' >&2; exit 2; }
+
+theme=''
+if [[ $apply_theme != auto && $apply_theme != '' ]]; then
+  case "$apply_theme" in
+    Nord|nord) theme='Nord' ;;
+    Dracula|dracula) theme='Dracula' ;;
+    'Catppuccin Mocha'|catppuccin-mocha|catppuccin) theme='Catppuccin Mocha' ;;
+    'Gruvbox Dark'|gruvbox-dark|gruvbox) theme='Gruvbox Dark' ;;
+    *) echo "Tema no reconocido: $apply_theme" >&2; exit 2 ;;
+  esac
+fi
+
 base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux)
-case "$manager_name" in
-  brew)
-    for package in "${base[@]}"; do
-      if brew list --versions "$package" >/dev/null 2>&1; then
-        printf 'Already installed: %s\n' "$package"
-      else
-        printf 'Installing: %s\n' "$package"
-        brew install "$package"
-      fi
+manager_name=$(manager)
+command -v ghostty >/dev/null 2>&1 && ghostty_found=1 || ghostty_found=0
+if [[ $manager_name == brew ]] && brew list --cask ghostty >/dev/null 2>&1; then ghostty_found=1; fi
+
+ask_yes_no() {
+  local prompt="$1" answer
+  if ((noninteractive)); then return 1; fi
+  read -r -p "$prompt [y/N] " answer
+  [[ $answer == [yY] || $answer == [yY][eE][sS] ]]
+}
+
+if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
+  clear 2>/dev/null || true
+  printf '\n\033[1;36m  DEVOPS AI WORKSTATION\033[0m  ·  v0.1.0 experimental\n'
+  printf '  Prepararé un plan para este equipo. No modificaré configuraciones existentes sin preguntarte.\n\n'
+  printf '  Sistema: %s\n  Gestor:  %s\n  Ghostty: %s\n\n' "$(uname -srm)" "$manager_name" "$([[ $ghostty_found -eq 1 ]] && echo 'detectado' || echo 'no detectado')"
+  printf '  Paso 1/3 · Herramientas de terminal\n'
+  if ((${#selected[@]} == 0)); then
+    if ask_yes_no '  ¿Instalo las herramientas base que falten?' ; then selected=("${base[@]}"); fi
+  fi
+  if ((${#selected[@]} == 0)); then
+    printf '  Escribe los nombres separados por coma, o Enter para omitir.\n  Opciones: %s\n' "${base[*]}"
+    read -r -p '  Selección: ' choice
+    if [[ -n $choice ]]; then IFS=',' read -r -a selected <<< "$choice"; fi
+  fi
+  printf '\n  Paso 2/3 · Ghostty\n'
+  if [[ $ghostty_found -eq 0 && $manager_name == brew ]] && ask_yes_no '  ¿Instalo Ghostty también?' ; then install_ghostty=yes; fi
+  printf '\n  Paso 3/3 · Tema\n'
+  if [[ $ghostty_found -eq 1 || $install_ghostty == yes ]]; then
+    printf '  Temas: Nord, Dracula, Catppuccin Mocha, Gruvbox Dark\n'
+    read -r -p '  Tema de Ghostty (Enter para dejarlo igual): ' theme_choice
+    [[ -n $theme_choice ]] && apply_theme=$theme_choice
+  fi
+  printf '\n  Se respetarán los archivos de configuración existentes.\n'
+  if ! ask_yes_no '  ¿Aplico este plan?' ; then echo 'Cancelado; no hice cambios.'; exit 0; fi
+else
+  if ((${#selected[@]} == 0)) && [[ $noninteractive -eq 1 ]]; then selected=("${base[@]}"); fi
+fi
+
+if ((${#selected[@]} > 0)); then
+  for tool in "${selected[@]}"; do
+    valid=0
+    for candidate in "${base[@]}"; do [[ $tool == "$candidate" ]] && valid=1; done
+    if [[ $valid -ne 1 ]]; then echo "Herramienta no reconocida para base: $tool" >&2; exit 2; fi
+  done
+fi
+
+printf 'Plan: perfil %s · gestor %s · herramientas seleccionadas: %s\n' "$profile" "$manager_name" "${selected[*]:-(ninguna)}"
+if [[ $manager_name == brew ]]; then
+  if ((${#selected[@]} > 0)); then
+    for package in "${selected[@]}"; do
+      if brew list --versions "$package" >/dev/null 2>&1; then printf 'Ya instalada: %s (se conserva)\n' "$package"
+      else printf 'Instalando: %s\n' "$package"; brew install "$package"; fi
     done
-    ;;
-  apt)
-    printf 'Detected apt. No packages were installed because this starter never invokes sudo.\n'
-    printf 'Install the base tools with your chosen package workflow, then rerun doctor.\n'
-    ;;
-  dnf|pacman)
-    printf 'Detected %s. Package installation is not wired up yet; no changes made.\n' "$manager_name"
-    ;;
-  *)
-    printf 'No supported package manager found. No packages installed.\n'
-    ;;
-esac
+  fi
+  if [[ $install_ghostty == yes && $ghostty_found -eq 0 ]]; then
+    if brew list --cask ghostty >/dev/null 2>&1; then echo 'Ghostty ya está instalado; se conserva.'
+    else brew install --cask ghostty; ghostty_found=1; fi
+  fi
+elif [[ $manager_name == apt ]]; then
+  echo 'Linux/apt detectado. No instalo paquetes automáticamente ni invoco sudo; instala los seleccionados con tu flujo de paquetes preferido.'
+elif [[ $manager_name == dnf || $manager_name == pacman ]]; then
+  echo "Detecté $manager_name. La integración de instalación todavía está pendiente; no hice cambios de paquetes."
+else
+  echo 'No encontré un gestor compatible; no instalé paquetes.'
+fi
 
 config_dir="$HOME/.config"
 mkdir -p "$config_dir"
 for source_file in "$ROOT/config/starship.toml" "$ROOT/config/zsh/.zshrc"; do
   if [[ $source_file == */.zshrc ]]; then destination="$HOME/.zshrc"; else destination="$config_dir/starship.toml"; fi
-  if [[ -e $destination ]]; then
-    printf 'Preserved existing config: %s\n' "$destination"
-  else
-    cp "$source_file" "$destination"
-    printf 'Added sample config: %s\n' "$destination"
-  fi
+  if [[ ! -e $destination ]]; then cp "$source_file" "$destination"; printf 'Añadida configuración de muestra: %s\n' "$destination"
+  else printf 'Configuración existente preservada: %s\n' "$destination"; fi
 done
 
-if [[ $profile == full ]]; then
-  printf '\nThe full profile is planned. Cloud, security, and AI tool installers have not been implemented; nothing extra was installed.\n'
+if [[ -n $theme ]]; then
+  if [[ $ghostty_found -eq 1 || $install_ghostty == yes ]]; then
+    ghostty_config="$config_dir/ghostty/config"
+    mkdir -p "$(dirname "$ghostty_config")"
+    if [[ -e $ghostty_config ]]; then
+      backup="$ghostty_config.backup.$(date +%Y%m%d%H%M%S)"
+      cp -p "$ghostty_config" "$backup"
+      tmp="$ghostty_config.tmp.$$"
+      if grep -Eq '^[[:space:]]*theme[[:space:]]*=' "$ghostty_config"; then
+        awk -v value="$theme" '/^[[:space:]]*theme[[:space:]]*=/ {$0="theme = " value} {print}' "$ghostty_config" > "$tmp"
+      else
+        cat "$ghostty_config" > "$tmp"
+        printf '\n# Added by DevOps AI Workstation\ntheme = %s\n' "$theme" >> "$tmp"
+      fi
+      mv "$tmp" "$ghostty_config"
+      printf 'Tema aplicado a Ghostty; respaldo: %s\n' "$backup"
+    else
+      printf 'theme = %s\n' "$theme" > "$ghostty_config"
+      printf 'Tema de Ghostty configurado: %s\n' "$theme"
+    fi
+  else
+    echo 'Ghostty no está instalado; no apliqué un tema.'
+  fi
 fi
-printf '\nDone. Run ./scripts/workstation/workstation doctor to review this machine.\n'
+
+if [[ $profile == full ]]; then
+  printf '\nCloud, seguridad y AI están catalogados, pero su instalación todavía está pendiente. No instalé herramientas de esos perfiles.\n'
+fi
+printf '\nListo. Diagnóstico: ./scripts/workstation/workstation doctor\n'
