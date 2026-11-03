@@ -37,7 +37,7 @@ Run from the cloned repository:
 bash ./install.sh
 ```
 
-This opens the interactive setup. Answer `y` to select all missing base tools, or answer `n` and enter a comma-separated subset such as `zsh,starship,fzf`. Then choose whether to install Ghostty if it is missing, select a theme, optionally set a welcome message, and confirm the plan.
+This opens the interactive setup. In a capable terminal, move through the tool list with ↑/↓, press Space to select tools, then press Enter. Press `a` to select all base tools or `c` to clear the list. Choose a Ghostty theme with ↑/↓ and Enter, then optionally set a welcome message and confirm the plan. Terminals without arrow-key support use text prompts.
 
 Other useful commands:
 
