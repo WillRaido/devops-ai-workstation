@@ -33,7 +33,7 @@ git clone https://github.com/WillRaido/devops-ai-workstation.git && cd devops-ai
 
 On Windows, open PowerShell in WSL2 and run the same command. For a native Windows terminal, use Windows Terminal; native PowerShell setup is not implemented yet.
 
-The installer walks through the choices in the console. It checks for existing base tools and Ghostty, offers to install missing tools, lets you select individual tools, choose a Ghostty theme, and optionally set a custom Zsh welcome message such as `WillDevOps`. It previews the plan and asks before applying it. Already installed packages are skipped. Existing Zsh and Starship configuration files are preserved. If you opt into the welcome message, the installer backs up an existing `.zshrc` before adding its startup hook. The ASCII style uses `figlet` for large letters when available and otherwise shows a framed banner.
+The installer walks through the choices in the console. In a capable terminal, use ↑/↓ to move, Space to select tools, and Enter to continue; theme choices use ↑/↓ and Enter. Press `a` to select all base tools or `c` to clear the selection. It checks for existing base tools and Ghostty, and optionally sets a custom Zsh welcome message such as `WillDevOps`. It previews the plan and asks before applying it. Already installed packages are skipped. Existing Zsh and Starship configuration files are preserved. If you opt into the welcome message, the installer backs up an existing `.zshrc` before adding its startup hook. The ASCII style uses `figlet` for large letters when available and otherwise shows a framed banner. In terminals without interactive arrow-key support, text prompts remain available.
 
 On macOS, Homebrew installs selected tools. On Linux, the wizard detects apt, dnf, or pacman but does not install packages yet; it never invokes `sudo`. If Ghostty is detected or you choose to install it through Homebrew, you can select Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark. When a Ghostty config already exists, the installer saves a timestamped backup before changing its theme. Ghostty also provides a larger built-in theme list through `ghostty +list-themes`. Other platform package integrations and full cloud/security/AI profiles remain planned.
 
@@ -63,7 +63,7 @@ Start the guided flow:
 bash ./install.sh
 ```
 
-At the tool prompt, answer `y` to select every missing base tool. Answer `n` to enter only the ones you want, separated by commas, for example `zsh,starship,fzf`. Already installed packages are skipped. The current selectable base list is Zsh, Starship, zoxide, fzf, ripgrep, jq, eza, bat, Atuin, tmux, and figlet.
+In the interactive tool list, move with ↑/↓, press Space to mark or unmark an item, and Enter to continue. Press `a` to select all or `c` to clear. Already installed packages are skipped. The current selectable base list is Zsh, Starship, zoxide, fzf, ripgrep, jq, eza, bat, Atuin, tmux, and figlet.
 
 You can also pass selections directly:
 
