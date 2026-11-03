@@ -33,9 +33,9 @@ git clone https://github.com/WillRaido/devops-ai-workstation.git && cd devops-ai
 
 On Windows, open PowerShell in WSL2 and run the same command. For a native Windows terminal, use Windows Terminal; native PowerShell setup is not implemented yet.
 
-The installer walks through the choices in the console. It checks for existing base tools and Ghostty, offers to install missing tools, lets you select individual tools, choose a Ghostty theme, and optionally set a custom Zsh welcome message such as `WillDevOps`. It previews the plan and asks before applying it. Already installed packages are skipped. Existing Zsh and Starship configuration files are preserved; if you opt into the welcome message, the installer backs up an existing `.zshrc` before adding its startup hook.
+The installer walks through the choices in the console. It checks for existing base tools and Ghostty, offers to install missing tools, lets you select individual tools, choose a Ghostty theme, and optionally set a custom Zsh welcome message such as `WillDevOps`. It previews the plan and asks before applying it. Already installed packages are skipped. Existing Zsh and Starship configuration files are preserved. If you opt into the welcome message, the installer backs up an existing `.zshrc` before adding its startup hook. The ASCII style uses `figlet` for large letters when available and otherwise shows a framed banner.
 
-On macOS, Homebrew installs selected tools. On Linux, the wizard detects apt, dnf, or pacman but does not install packages yet; it never invokes `sudo`. If Ghostty is detected or you choose to install it through Homebrew, you can select Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark. When a Ghostty config already exists, the installer saves a timestamped backup before changing its theme. Other platform package integrations and full cloud/security/AI profiles remain planned.
+On macOS, Homebrew installs selected tools. On Linux, the wizard detects apt, dnf, or pacman but does not install packages yet; it never invokes `sudo`. If Ghostty is detected or you choose to install it through Homebrew, you can select Nord, Dracula, Catppuccin Mocha, or Gruvbox Dark. When a Ghostty config already exists, the installer saves a timestamped backup before changing its theme. Ghostty also provides a larger built-in theme list through `ghostty +list-themes`. Other platform package integrations and full cloud/security/AI profiles remain planned.
 
 You can also pass choices directly, for example `./install.sh --with zsh,starship,fzf --theme Nord --welcome WillDevOps`. Run `./install.sh --help` to see options. Review the scripts before running them if you want to see exactly what they do.
 
@@ -51,7 +51,7 @@ The `doctor` command reports platform and shell-tool availability. It does not i
 
 | Layer | Included in the starter | Status |
 | --- | --- | --- |
-| **Shell** | Zsh, Starship, zoxide, fzf, ripgrep, jq, eza, bat, Atuin, tmux | Base profile; Homebrew installs on macOS |
+| **Shell** | Zsh, Starship, zoxide, fzf, ripgrep, jq, eza, bat, Atuin, tmux, figlet | Base profile; Homebrew installs on macOS |
 | **Cloud & delivery** | AWS CLI, Azure CLI, gcloud, kubectl, Helm, K9s, kubectx, Terraform/OpenTofu, Terragrunt, Docker/Podman, Ansible, Packer | Cataloged; managed profile planned |
 | **Security** | CodeQL, Semgrep, Gitleaks, OSV-Scanner, Trivy, Grype, Syft, Cosign, Checkov, TFLint, actionlint, Zizmor, GitHub CLI | Cataloged; managed profile planned |
 | **AI** | Claude Code, Codex CLI, Cursor, Gemini CLI, Aider | Cataloged; managed profile planned |
