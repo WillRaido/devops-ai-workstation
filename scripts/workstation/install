@@ -27,15 +27,6 @@ done
 welcome_message=${welcome_message%%$'\n'*}
 
 theme=''
-if [[ $apply_theme != auto && $apply_theme != '' ]]; then
-  case "$apply_theme" in
-    Nord|nord) theme='Nord' ;;
-    Dracula|dracula) theme='Dracula' ;;
-    'Catppuccin Mocha'|catppuccin-mocha|catppuccin) theme='Catppuccin Mocha' ;;
-    'Gruvbox Dark'|gruvbox-dark|gruvbox) theme='Gruvbox Dark' ;;
-    *) echo "Tema no reconocido: $apply_theme" >&2; exit 2 ;;
-  esac
-fi
 
 base=(zsh starship zoxide fzf ripgrep jq eza bat atuin tmux figlet)
 manager_name=$(manager)
@@ -77,11 +68,12 @@ menu_choose() {
     fi
     IFS= read -r -s -n1 key
     if [[ $key == $'\033' ]]; then
-      sequence=''; IFS= read -r -s -n2 -t 0.1 sequence || true
+      sequence=''; IFS= read -r -s -n2 -t 1 sequence || true
       case "$sequence" in '[A'|'OA') ((cursor>0)) && ((cursor-=1)) ;; '[B'|'OB') ((cursor<${#menu_options[@]}-1)) && ((cursor+=1)) ;; esac
-    elif [[ $key == $'\n' || $key == $'\r' ]]; then
+    elif [[ -z $key || $key == $'\n' || $key == $'\r' ]]; then
       if [[ $mode == multi ]]; then
         for ((i=0; i<${#menu_options[@]}; i++)); do [[ ${menu_toggles[i]} == 1 ]] && menu_result+=("${menu_options[i]}"); done
+        ((${#menu_result[@]})) || menu_result=('__NONE__')
       else menu_result=("${menu_options[cursor]}"); fi
       return 0
     elif [[ $mode == multi && $key == ' ' ]]; then
@@ -105,6 +97,7 @@ if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
     if [[ ${TERM:-dumb} != dumb ]]; then
       menu_choose 'Elige las herramientas base que quieres instalar' multi
       selected=("${menu_result[@]}")
+      [[ ${selected[0]:-} == __NONE__ ]] && selected=()
     else
       printf '  Escribe los nombres separados por coma, o Enter para omitir.\n  Opciones: %s\n' "${base[*]}"
       read -r -p '  Selección: ' choice
@@ -142,6 +135,16 @@ if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
   if ! ask_yes_no '  Escribe y para aplicar el plan, o n para cancelar. ¿Aplico este plan?' ; then echo 'Cancelado; no hice cambios.'; exit 0; fi
 else
   if ((${#selected[@]} == 0)) && [[ $noninteractive -eq 1 ]]; then selected=("${base[@]}"); fi
+fi
+
+if [[ $apply_theme != auto && $apply_theme != '' ]]; then
+  case "$apply_theme" in
+    Nord|nord) theme='Nord' ;;
+    Dracula|dracula) theme='Dracula' ;;
+    'Catppuccin Mocha'|catppuccin-mocha|catppuccin) theme='Catppuccin Mocha' ;;
+    'Gruvbox Dark'|gruvbox-dark|gruvbox) theme='Gruvbox Dark' ;;
+    *) echo "Tema no reconocido: $apply_theme" >&2; exit 2 ;;
+  esac
 fi
 
 if ((${#selected[@]} > 0)); then
