@@ -45,8 +45,14 @@ if [[ $manager_name == brew ]] && brew list --cask ghostty >/dev/null 2>&1; then
 ask_yes_no() {
   local prompt="$1" answer
   if ((noninteractive)); then return 1; fi
-  read -r -p "$prompt [y/N] " answer
-  [[ $answer == [yY] || $answer == [yY][eE][sS] ]]
+  while true; do
+    read -r -p "$prompt [y/N] " answer
+    case "$answer" in
+      [yY]|[yY][eE][sS]|[sS]|[sS][iI]) return 0 ;;
+      ''|[nN]|[nN][oO]) return 1 ;;
+      *) printf '  Responde y/n (o s/n). Para un mensaje personalizado, primero responde y.\n' ;;
+    esac
+  done
 }
 
 if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
@@ -84,7 +90,7 @@ if [[ -t 0 && -t 1 && $noninteractive -eq 0 ]]; then
   printf '\n  Se respetarán los archivos de configuración existentes.\n'
   if [[ -n $welcome_message && -z $welcome_style ]]; then welcome_style=ascii; fi
   if [[ -n $welcome_style && $welcome_style != ascii && $welcome_style != plain ]]; then echo 'Estilo de bienvenida debe ser ascii o plain.' >&2; exit 2; fi
-  if ! ask_yes_no '  ¿Aplico este plan?' ; then echo 'Cancelado; no hice cambios.'; exit 0; fi
+  if ! ask_yes_no '  Escribe y para aplicar el plan, o n para cancelar. ¿Aplico este plan?' ; then echo 'Cancelado; no hice cambios.'; exit 0; fi
 else
   if ((${#selected[@]} == 0)) && [[ $noninteractive -eq 1 ]]; then selected=("${base[@]}"); fi
 fi
